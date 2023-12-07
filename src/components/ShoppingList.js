@@ -1,64 +1,29 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ItemForm from './ItemForm';
-import Item from './Item';
+import React, { useState, useEffect } from "react";
+import Item from "./Item";
+import ItemForm from "./ItemForm";
 
 function ShoppingList() {
   const [items, setItems] = useState([]);
-  const isMounted = useRef(true);
 
   useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:4000/items')
-      .then((response) => response.json())
-      .then((data) => {
-        if (isMounted.current) {
-          setItems(data);
-        }
-      })
-      .catch((error) => {
-        // Handle fetch error
-      });
+    fetch("http://localhost:4000/items")
+      .then((r) => r.json())
+      .then((items) => setItems(items));
   }, []);
 
   function handleAddItem(newItem) {
-    setItems((prevItems) => [...prevItems, newItem]);
+    setItems([...items, newItem]);
   }
 
   function handleUpdateItem(updatedItem) {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item
-      )
-    );
+    const updatedItems = items.map((item) => (item.id === updatedItem.id ? updatedItem : item));
+    setItems(updatedItems);
   }
 
-  function handleDeleteItem(id) {
-    fetch(`http://localhost:4000/items/${id}`, {
-      method: 'DELETE',
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response;
-      })
-      .then(() => {
-        if (isMounted.current) {
-          setItems((prevItems) =>
-            prevItems.filter((item) => item.id !== id)
-          );
-        }
-      })
-      .catch((error) => {
-        console.error('Error deleting item:', error);
-      });
+  function handleDeleteItem(deletedItem) {
+    const updatedItems = items.filter((item) => item.id !== deletedItem.id);
+    setItems(updatedItems);
   }
-  
 
   return (
     <div className="ShoppingList">

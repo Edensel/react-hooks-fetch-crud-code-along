@@ -1,61 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function ItemForm({ onAddItem }) {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('Produce');
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("Produce");
 
   function handleSubmit(e) {
     e.preventDefault();
-    const newItem = {
+    const itemData = {
       name: name,
       category: category,
       isInCart: false,
     };
-  
-    fetch('http://localhost:4000/items', {
-      method: 'POST',
+    fetch("http://localhost:4000/items", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(newItem),
+      body: JSON.stringify(itemData),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        onAddItem(data);
-        setName('');
-        setCategory('Produce');
-      })
-      .catch((error) => {
-        console.error('Error adding item:', error);
-      });
+      .then((r) => r.json())
+      .then((newItem) => onAddItem(newItem));
   }
-  
 
   return (
     <form className="NewItem" onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input
-          type="text"
-          placeholder="Item name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </label>
-      <label>
-        Category:
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="Produce">Produce</option>
-          <option value="Dairy">Dairy</option>
-        </select>
-      </label>
-      <button type="submit">Add to List</button>
+      <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <option value="Produce">Produce</option>
+        <option value="Dairy">Dairy</option>
+        {/* Other category options */}
+      </select>
+      <button type="submit">Add Item</button>
     </form>
   );
 }

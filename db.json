@@ -41,18 +41,6 @@
       "category": "Dairy",
       "isInCart": false,
       "id": 7
-    },
-    {
-      "name": "Mango",
-      "category": "Produce",
-      "isInCart": false,
-      "id": 8
-    },
-    {
-      "name": "DairyMilk",
-      "category": "Dairy",
-      "isInCart": false,
-      "id": 9
     }
   ]
 }
